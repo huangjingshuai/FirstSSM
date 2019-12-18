@@ -1,0 +1,38 @@
+
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+<!--<context-param>整个项目的全局变量，相当于一个固定值。paraname是键，paravalue是值-->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:applicationContext.xml</param-value>
+  </context-param>
+
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+    <!--配置DispatcherServlet-->
+    <servlet>
+        <!--DispatcherServlet前置控制器，拦截请求，依据相应规则分发到Controller处理-->
+        <servlet-name>spring-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--配置springMVC需要加载的配置文件 spring-mvc.xml-->
+        <!--<init-param>整个项目局部变量,只能造Servlet中使用。-->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring-mvc.xml</param-value>
+        </init-param>
+        <!--<load-on-startup>表示启动容器时初始化Servlet，当值为0或者大于0时，表示在容器在应用启动时加载初始化这个Servlet-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!--<servlet-mapping>声明与Servlet相应的匹配规则，每个<url-pattern>代表一个匹配规则:精确路径>最长路径>拓展名-->
+    <servlet-mapping>
+        <servlet-name>spring-dispatcher</servlet-name>
+        <!--默认匹配所有请求-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+</web-app>

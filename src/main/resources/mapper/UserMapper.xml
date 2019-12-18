@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.hjs.dao.UserDao">
+        <sql id="userField">
+        a.id as "id",
+        a.name as "name",
+        a.password as "password"
+        </sql>
+        <!--获取全部用户-->
+        <select id="findAll" resultType="com.hjs.model.User">
+        select
+        <include refid="userField"/>
+        from user as a
+        </select>
+        <!--<select id="findAll" resultType="com.hjs.model.User">
+                SELECT * FROM USER
+        </select>-->
+        <!--通过名称查询用户-->
+        <select id="findByName" parameterType="String" resultType="com.hjs.model.User">
+                SELECT * FROM USER
+                WHERE name= #{name}
+        </select>
+        <!--插入用户数据，主键自增-->
+        <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.hjs.model.User">
+                INSERT INTO  user(id,name,password) VALUE (#{id},#{name},#{password})
+        </insert>
+        <!--更新用户数据-->
+        <update id="update" parameterType="com.hjs.model.User">
+                UPDATE  user
+                SET
+                name=#{name},
+                password=#{password}
+                WHERE id = #{id}
+        </update>
+        <!--删除数据-->
+        <delete id="deleteByName" parameterType="String">
+                DELETE FROM USER
+                WHERE name= #{name}
+        </delete>
+
+        <resultMap id="userMap" type="com.hjs.model.User">
+                <id property="id" column="id"/>
+                <result property="name" column="name"/>
+                <result property="password" column="password"/>
+        </resultMap>
+        <!--通过用户名name和密码password查询用户-->
+        <select id="findByNameAndPassword" parameterType="String" resultMap="userMap">
+                SELECT
+                <include refid="userField"></include>
+                FROM user AS a
+                WHERE 1=1
+                <if test="name !=null and name != ''">
+                        and name= #{name}
+                </if>
+                <if test="password !=null and password != ''">
+                        and password= #{password}
+                </if>
+        </select>
+        <!--根据Id集合查询用户列表-->
+        <select id="findByIds" resultType="com.hjs.model.User">
+                SELECT * FROM  USER
+                WHERE id IN
+                <foreach  item="item" index="index" collection="Ids" open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+          </select>
+        </mapper>
